@@ -24,13 +24,14 @@ use Illuminate\Support\Facades\Log;
 // });
 
 Route::get('/category/{id}', function($id) {
-    return new ProductResource(Product::where('product_category_id',$id)->get());
+    return ProductResource::collection(Product::where('product_category_id',$id)->get());
 });
 
 Route::get('/product/{id}', function($id) {
-    $product = Product::where('id',$id)->get();
-    $product[0]->attributes = json_decode($product[0]->attributes, true);
-    return new ProductResource($product);
+    //$product = Product::where('id',$id)->get();
+    //$product[0]->attributes = json_decode($product[0]->attributes, true);
+    //Log::info($product);
+    return new ProductResource(Product::where('id',$id)->first());
 });
 
 Route::get('/orders', function($user_id) {
