@@ -4,7 +4,9 @@ use App\Http\Resources\OrderResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 
@@ -40,5 +42,23 @@ Route::get('/orders', function($user_id) {
 
 Route::post('/orders', function($data) {
     return new OrderResource(Order::create($data));
+});
+
+Route::get('/is-auth', function() {
+    return response()->json(['isAuthentificated'=>Auth::check()]);
+});
+
+Route::get('/logout', function() {
+    Auth::logout();
+    return response()->json();
+});
+
+Route::get('/user', function() {
+    return Auth::user();
+});
+
+Route::put('/update-user', function(Request $request) {
+    Log::info($request);
+    return User::where('id', Auth::id())->update($request->toArray());
 });
 
