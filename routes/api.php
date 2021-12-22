@@ -36,12 +36,12 @@ Route::get('/product/{id}', function($id) {
     return new ProductResource(Product::where('id',$id)->first());
 });
 
-Route::get('/orders', function($user_id) {
-    return new OrderResource(Order::where('user_id',$user_id)->get());
+Route::get('/orders', function() {
+    return new OrderResource(Order::where('user_id',Auth::id())->get());
 });
 
-Route::post('/orders', function($data) {
-    return new OrderResource(Order::create($data));
+Route::post('/create-order', function(Request $request) {
+    return new OrderResource(Order::create($request->toArray()));
 });
 
 Route::get('/is-auth', function() {
