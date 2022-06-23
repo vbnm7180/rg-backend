@@ -1,48 +1,19 @@
 <?php
 
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\ProductResource;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::get('/category/{id}', [ApiController::class,'getProducts']);
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('/product/{id}', [ApiController::class,'getProduct']);
 
-Route::get('/category/{id}', function($id) {
-    return ProductResource::collection(Product::where('product_category_id',$id)->get());
-});
+Route::get('/orders', [ApiController::class,'getUserOrders']);
 
-Route::get('/product/{id}', function($id) {
-    //$product = Product::where('id',$id)->get();
-    //$product[0]->attributes = json_decode($product[0]->attributes, true);
-    //Log::info($product);
-    return new ProductResource(Product::where('id',$id)->first());
-});
+Route::post('/create-order', [ApiController::class,'createOrder']);
 
-Route::get('/orders', function() {
-    return new OrderResource(Order::where('user_id',Auth::id())->get());
-});
-
-Route::post('/create-order', function(Request $request) {
-    return new OrderResource(Order::create($request->toArray()));
-});
+Route::put('/update-user', [ApiController::class,'updateUser']);
 
 Route::get('/is-auth', function() {
     return response()->json(['isAuthentificated'=>Auth::check()]);
@@ -56,9 +27,3 @@ Route::get('/logout', function() {
 Route::get('/user', function() {
     return Auth::user();
 });
-
-Route::put('/update-user', function(Request $request) {
-    Log::info($request);
-    return User::where('id', Auth::id())->update($request->toArray());
-});
-
